@@ -15,7 +15,7 @@ install:
 before_script:
   - psql -c "CREATE USER lethaluser WITH PASSWORD 'password';"
   - psql -c "ALTER USER lethaluser WITH CREATEDB;"
-  - psql -c "CREATE DATABASE lethaldb OWNER dayofdieuser;"
+  - psql -c "CREATE DATABASE lethaldb OWNER lethaluser;"
 
 script:
   - python manage.py test
