@@ -46,8 +46,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
     # Local Apps
-    'pizza_order'
+    'pizza_order',
+    'my_auth'
 ]
+AUTH_USER_MODEL = 'my_auth.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
