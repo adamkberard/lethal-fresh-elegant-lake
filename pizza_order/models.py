@@ -1,4 +1,5 @@
 # Create your models here.
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -40,11 +41,11 @@ class PizzaOrder(models.Model):
     )
 
     crust = models.CharField(
-        max_length=5,
+        max_length=4,
         choices=CRUST_CHOICES,
         default=CRUST_THIN
     )
 
-    table_number = models.IntegerField()
-    order_id = models.IntegerField()
-    timestamp = models.DateTimeField()
+    table_number = models.IntegerField(MinValueValidator(30000), blank=True, null=True)
+    order_id = models.IntegerField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)

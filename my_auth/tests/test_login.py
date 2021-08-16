@@ -1,8 +1,9 @@
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from .factories import DEFAULT_PASSWORD, CustomUserFactory
 from core.MyTestCase import MyTestCase
+
+from .factories import DEFAULT_PASSWORD, CustomUserFactory
 
 
 class Test_Login_View(MyTestCase):

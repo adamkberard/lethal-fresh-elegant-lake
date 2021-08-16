@@ -30,3 +30,12 @@ class MyTestCase(TestCase):
             return json.loads(response.content)
         except ValueError:
             self.fail("Couldn't load the JSON data safely.")
+
+    @classmethod
+    def getDictFromBody(self, body):
+        dict = {}
+        params = body.split("&")
+        for param in params:
+            paramSplit = param.split("=")
+            dict[paramSplit[0]] = paramSplit[1]
+        return dict

@@ -33,7 +33,7 @@ class MyLogInSerializer(serializers.Serializer):
 
     def validate(self, data):
         """
-        Gotta makes sure the person can be logged in
+        Gotta make sure the person can be logged in
         """
         user = authenticate(username=data['email'], password=data['password'])
         if user is None:
