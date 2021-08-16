@@ -1,3 +1,5 @@
+import json
+
 from django.urls import reverse
 from httmock import HTTMock, urlmatch
 from rest_framework.test import APIClient
@@ -33,7 +35,7 @@ class Test_Pizza_Ordering(MyTestCase):
 
     @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/orders')
     def pizza_order_mock(url, caught_url, request):
-        caughtDict = MyTestCase.getDictFromBody(request.body)
+        caughtDict = json.loads(request.body)
         caughtDict['Order_ID'] = int(caughtDict['Table_No']) - 30000
         caughtDict['Timestamp'] = "2021-08-16T02:37:41.353941"
         return {
