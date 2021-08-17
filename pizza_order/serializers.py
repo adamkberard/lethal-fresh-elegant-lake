@@ -46,7 +46,6 @@ class PizzaOrderSerializer(serializers.Serializer):
         }
         response = requests.post(url=url, json=data, headers=hed)
         if response.status_code != 201:
-            print(response.content)
             raise serializers.ValidationError({'error': "Error sending order to pizzaria."})
         try:
             responseData = json.loads(response.content)
