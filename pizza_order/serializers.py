@@ -28,6 +28,8 @@ class PizzaOrderSerializer(serializers.Serializer):
             raise serializers.ValidationError({'error': "Couldn't parse login return."})
         return responseData['access_token']
 
+    # Might want to check that I can parse the json response and that the
+    # two fields I want are in it
     def sendPizzaOrder(self, pizzaOrder, token):
         hed = {'Authorization': 'Bearer ' + token}
         url = 'https://order-pizza-api.herokuapp.com/api/orders'
@@ -40,24 +42,33 @@ class PizzaOrderSerializer(serializers.Serializer):
         }
         response = requests.post(url=url, json=data, headers=hed)
         if response.status_code != 201:
-            raise serializers.ValidationError({'error': "Error sending order to pizzaria."})
-        try:
-            responseData = json.loads(response.content)
-        except ValueError:
-            raise serializers.ValidationError({'error': "Couldn't parse order return."})
+            raise serializers.ValidationError({'error': "Error sending order to pizzeria."})
+        responseData = json.loads(response.content)
         return responseData['Table_No'], responseData['Order_ID']
+    
+    def attemptToSendPizzaOrder(self, pizzaOrder, token):
+        # We try sending the pizza order to the pizzeria 5 times
+        # If all of that fails then we return to the user with that
+        attempts = 3
+        for i in range(attempts):
+            try:
+                table_number, order_id = self.sendPizzaOrder(pizzaOrder, token)
+                return table_number, order_id
+            except serializers.ValidationError:
+                if(i == attempts - 1):
+                    raise serializers.ValidationError(
+                        {'error': "Couldn't send order to pizzeria."})
 
     def create(self, validated_data):
         tempPizzaOrder = PizzaOrder(
             flavor=validated_data.get('flavor'),
             size=validated_data.get('size'),
             crust=validated_data.get('crust'),
-            ordered_by=self.context.get('ordered_by')
-        )
+            ordered_by=self.context.get('ordered_by'))
         tempPizzaOrder.save()
 
         token = self.pizzeriaLogin()
-        table_number, order_number = self.sendPizzaOrder(tempPizzaOrder, token)
+        table_number, order_number = self.attemptToSendPizzaOrder(tempPizzaOrder, token)        
 
         tempPizzaOrder.order_id = order_number
         tempPizzaOrder.table_number = table_number

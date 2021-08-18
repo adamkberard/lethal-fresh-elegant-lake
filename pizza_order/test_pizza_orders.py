@@ -96,7 +96,7 @@ class Test_Pizza_Ordering(MyTestCase):
         responseData = self.loadJSONSafely(response)
 
         # Now we check the data
-        self.assertEqual(responseData['error'], "Error sending order to pizzaria.")
+        self.assertEqual(responseData['error'], "Error sending order to pizzeria.")
 
     def test_post_every_pizza(self):
         authUser = CustomUserFactory()
