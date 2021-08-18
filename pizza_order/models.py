@@ -1,6 +1,7 @@
 # Create your models here.
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.conf import settings
 
 
 class PizzaOrder(models.Model):
@@ -49,3 +50,7 @@ class PizzaOrder(models.Model):
     table_number = models.IntegerField(MinValueValidator(30000), blank=True, null=True)
     order_id = models.IntegerField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+
+    ordered_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                   on_delete=models.CASCADE,
+                                   related_name="ordered_by")
