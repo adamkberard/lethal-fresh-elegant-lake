@@ -78,7 +78,7 @@ class Test_Pizza_Ordering(MyTestCase):
         responseData = self.loadJSONSafely(response)
 
         # Now we check the data
-        self.assertEqual(responseData['error'], "Couldn't log in to pizzeria.")
+        self.assertEqual(responseData['error'], "Error logging in to pizzeria.")
 
     def test_post_single_pizza_bad_table_number(self):
         authUser = CustomUserFactory()

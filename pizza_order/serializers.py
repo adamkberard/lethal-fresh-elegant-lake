@@ -4,6 +4,7 @@ import requests
 from rest_framework import serializers
 
 from .models import PizzaOrder
+import random
 
 
 class PizzaOrderSerializer(serializers.Serializer):
@@ -14,6 +15,7 @@ class PizzaOrderSerializer(serializers.Serializer):
     size = serializers.ChoiceField([item[0] for item in PizzaOrder.SIZE_CHOICES])
     crust = serializers.ChoiceField([item[0] for item in PizzaOrder.CRUST_CHOICES])
 
+    # Might want to check that I can parse the json response and that the token is there
     def pizzeriaLogin(self):
         # First we log in to the pizza place to get a fresh token
         url = 'https://order-pizza-api.herokuapp.com/api/auth'
@@ -21,7 +23,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         data = {'username': 'test', 'password': 'test'}
         response = requests.post(url=url, json=data)
         if response.status_code != 200:
-            raise serializers.ValidationError({'error': "Couldn't log in to pizzeria."})
+            raise serializers.ValidationError({'error': "Error logging in to pizzeria."})
         try:
             responseData = json.loads(response.content)
         except ValueError:
@@ -42,10 +44,10 @@ class PizzaOrderSerializer(serializers.Serializer):
         }
         response = requests.post(url=url, json=data, headers=hed)
         if response.status_code != 201:
-            raise serializers.ValidationError({'error': "Error sending order to pizzeria."})
+            raise serializers.ValidationError()
         responseData = json.loads(response.content)
         return responseData['Table_No'], responseData['Order_ID']
-    
+
     def attemptToSendPizzaOrder(self, pizzaOrder, token):
         # We try sending the pizza order to the pizzeria 5 times
         # If all of that fails then we return to the user with that
@@ -55,9 +57,15 @@ class PizzaOrderSerializer(serializers.Serializer):
                 table_number, order_id = self.sendPizzaOrder(pizzaOrder, token)
                 return table_number, order_id
             except serializers.ValidationError:
+                # It pretty much only fails because the table_no is taken, which
+                # shouldn't happen since my table numbers are based on the id's
+                # which have to be unique, but if it does come back with that error
+                # i'll just randomly add some amount to the table number and try that
+                pizzaOrder.table_number += random.random(10000)
+                # The third time it fails just give up
                 if(i == attempts - 1):
                     raise serializers.ValidationError(
-                        {'error': "Couldn't send order to pizzeria."})
+                        {'error': "Error sending order to pizzeria."})
 
     def create(self, validated_data):
         tempPizzaOrder = PizzaOrder(
@@ -68,7 +76,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         tempPizzaOrder.save()
 
         token = self.pizzeriaLogin()
-        table_number, order_number = self.attemptToSendPizzaOrder(tempPizzaOrder, token)        
+        table_number, order_number = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
 
         tempPizzaOrder.order_id = order_number
         tempPizzaOrder.table_number = table_number
