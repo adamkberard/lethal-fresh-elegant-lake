@@ -1,10 +1,10 @@
 import json
+import random
 
 import requests
 from rest_framework import serializers
 
 from .models import PizzaOrder
-import random
 
 
 class PizzaOrderSerializer(serializers.Serializer):
@@ -61,7 +61,7 @@ class PizzaOrderSerializer(serializers.Serializer):
                 # shouldn't happen since my table numbers are based on the id's
                 # which have to be unique, but if it does come back with that error
                 # i'll just randomly add some amount to the table number and try that
-                pizzaOrder.table_number += random.random(10000)
+                pizzaOrder.table_number += random.randint(100, 10000)
                 # The third time it fails just give up
                 if(i == attempts - 1):
                     raise serializers.ValidationError(
