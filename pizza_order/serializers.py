@@ -68,12 +68,15 @@ class PizzaOrderSerializer(serializers.Serializer):
                         {'error': "Error sending order to pizzeria."})
 
     def create(self, validated_data):
-        tempPizzaOrder = PizzaOrder(
+        # When it gets created it will gain a unique ID, which I can use to make
+        # a unique table_no later. I know table_no's eventually become reusable,
+        # so I should try to find a way to utilize that rather than just running
+        # up the table_no forever
+        tempPizzaOrder = PizzaOrder.objects.create(
             flavor=validated_data.get('flavor'),
             size=validated_data.get('size'),
             crust=validated_data.get('crust'),
             ordered_by=self.context.get('ordered_by'))
-        tempPizzaOrder.save()
 
         token = self.pizzeriaLogin()
         table_number, order_number = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
