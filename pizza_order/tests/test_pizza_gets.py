@@ -1,7 +1,4 @@
-import json
-
 from django.urls import reverse
-from httmock import HTTMock, urlmatch
 from rest_framework.test import APIClient
 
 from core.MyTestCase import MyTestCase
@@ -38,7 +35,7 @@ class Test_Pizza_Getting_Single_Pizzas(MyTestCase):
 
     def test_get_single_pizza_all_options(self):
         authUser = CustomUserFactory()
-        
+
         for flavor in [x[0] for x in PizzaOrder.FLAVOR_CHOICES]:
             for size in [x[0] for x in PizzaOrder.SIZE_CHOICES]:
                 for crust in [x[0] for x in PizzaOrder.CRUST_CHOICES]:

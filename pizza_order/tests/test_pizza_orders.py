@@ -1,14 +1,11 @@
-import json
-
 from django.urls import reverse
 from httmock import HTTMock
 from rest_framework.test import APIClient
 
-from core.MyTestCase import MyTestCase
 from my_auth.tests.factories import CustomUserFactory
 
-from .MyPizzaTester import MyPizzaTester
 from ..models import PizzaOrder
+from .MyPizzaTester import MyPizzaTester
 
 
 class Test_Order_Single_Pizza_Success(MyPizzaTester):
