@@ -23,7 +23,7 @@ class Test_Pizza_Getting_Single_Pizzas(MyTestCase):
 
         client = APIClient()
         client.force_authenticate(user=authUser)
-        response = client.get(reverse('pizza_get_list'))
+        response = client.get(reverse('pizza_create_list'))
 
         self.assertResponse200(response)
         responseData = self.loadJSONSafely(response)
@@ -33,9 +33,5 @@ class Test_Pizza_Getting_Single_Pizzas(MyTestCase):
         self.assertEqual(responseData[0]['flavor'], PizzaOrder.FLAVOR_HAWAII)
         self.assertEqual(responseData[0]['size'], PizzaOrder.SIZE_LARGE)
         self.assertEqual(responseData[0]['crust'], PizzaOrder.CRUST_THIN)
-        self.assertEqual(responseData[0]['Order_ID'], PizzaOrder.CRUST_THIN)
-        self.assertEqual(responseData[0]['Table_No'], PizzaOrder.CRUST_THIN)
-
-
-        self.assertIn('Order_ID', responseData)
-        self.assertGreaterEqual(responseData['Table_No'], 30000)
+        self.assertEqual(responseData[0]['Order_ID'], pizza.order_id)
+        self.assertEqual(responseData[0]['Table_No'], 30000)
