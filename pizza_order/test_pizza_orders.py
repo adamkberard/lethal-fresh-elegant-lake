@@ -39,7 +39,39 @@ class Test_Pizza_Ordering(MyTestCase):
     def pizza_order_mock_bad_table_number(self, caught_url, request):
         return {'status_code': 409}
 
+    @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/orders')
+    def pizza_order_mock_bad_table_number_once(self, caught_url, request):
+        caughtDict = json.loads(request.body)
+        # Only mock the first bad attempt
+        if caughtDict['Table_No'] == 300001:
+            return {'status_code': 409}
+        else:
+            return self.pizza_order_mock(caught_url, request)
+
     def test_post_single_pizza(self):
+        authUser = CustomUserFactory()
+        data = {
+            'flavor': 'Hawaii',
+            'size': 'Large',
+            'crust': 'Thin'
+        }
+        client = APIClient()
+        client.force_authenticate(user=authUser)
+        with HTTMock(self.login_mock, self.pizza_order_mock):
+            response = client.post(reverse('pizza_create_list'), data=data, format='json')
+
+        self.assertResponse201(response)
+        responseData = self.loadJSONSafely(response)
+
+        # Now we check the data
+        self.assertEqual(responseData['flavor'], 'Hawaii')
+        self.assertEqual(responseData['size'], 'Large')
+        self.assertEqual(responseData['crust'], 'Thin')
+
+        self.assertIn('Order_ID', responseData)
+        self.assertGreaterEqual(responseData['Table_No'], 30000)
+
+    def test_post_single_pizza_bad_table_no_once(self):
         authUser = CustomUserFactory()
         data = {
             'flavor': 'Hawaii',
