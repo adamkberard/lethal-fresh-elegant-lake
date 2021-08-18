@@ -22,7 +22,8 @@ class Test_Register_View(MyTestCase):
 
     def test_correct_register_many_other_users(self):
         """Testing a legitimate registration with one other user."""
-        for i in range(100):
+        numOtherUsers = 20
+        for i in range(numOtherUsers):
             CustomUserFactory()
 
         data = {'email': 'testEmail@gmail.com', 'password': DEFAULT_PASSWORD}

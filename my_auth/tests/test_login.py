@@ -23,9 +23,11 @@ class Test_Login_View(MyTestCase):
 
     def test_correct_login_one_other_user(self):
         """Testing a legitimate login with many other users in the database."""
-        userModel = CustomUserFactory()
-        for _ in range(100):
+        numOtherUsers = 20
+        for _ in range(numOtherUsers):
             CustomUserFactory()
+
+        userModel = CustomUserFactory()
         data = {'email': userModel.email, 'password': DEFAULT_PASSWORD}
 
         client = APIClient()
