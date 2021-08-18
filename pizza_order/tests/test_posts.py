@@ -8,7 +8,7 @@ from ..models import PizzaOrder
 from .MyPizzaTester import MyPizzaTester
 
 
-class Test_Order_Single_Pizza_Success(MyPizzaTester):
+class Test_Post_Single_Pizza(MyPizzaTester):
     def test_post_single_pizza(self):
         authUser = CustomUserFactory()
         data = {
@@ -63,7 +63,7 @@ class Test_Order_Single_Pizza_Success(MyPizzaTester):
                     table_numbers.append(responseData['Table_No'])
 
 
-class Test_Order_Single_Pizza_Fail(MyPizzaTester):
+class Test_Post_Single_Pizza_Fail(MyPizzaTester):
 
     def test_post_single_pizza_bad_table_no_once(self):
         authUser = CustomUserFactory()
