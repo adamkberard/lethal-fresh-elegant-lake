@@ -2,11 +2,10 @@ import json
 import random
 
 import requests
+from dateutil import parser
 from rest_framework import serializers
 
 from .models import PizzaOrder
-
-from dateutil import parser
 
 
 class PizzaOrderSerializer(serializers.Serializer):

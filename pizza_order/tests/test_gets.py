@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.urls import reverse
 from rest_framework.test import APIClient
 
@@ -6,9 +8,8 @@ from my_auth.tests.factories import CustomUserFactory
 
 from ..models import PizzaOrder
 
-from datetime import datetime
-
 timeFormatStr = "%Y-%m-%dT%H:%M:%S.%f"
+
 
 # Maybe only create auth user once...
 class Test_Get_Single_Pizza(MyTestCase):
@@ -59,7 +60,7 @@ class Test_Get_Single_Pizza(MyTestCase):
                     pizza.order_id = pizza.id
                     pizza.save()
                     order_ids.append(pizza.order_id)
-    
+
         client = APIClient()
         client.force_authenticate(user=authUser)
 
@@ -93,7 +94,6 @@ class Test_Get_Many_Pizzas(MyTestCase):
 
         # Now we check the data, make sure it is accurate
         self.assertEqual(len(responseData), 0)
-
 
     def test_get_single_pizza(self):
         authUser = CustomUserFactory()

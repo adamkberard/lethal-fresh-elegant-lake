@@ -1,10 +1,9 @@
 import json
+from datetime import datetime
 
 from httmock import urlmatch
 
 from core.MyTestCase import MyTestCase
-
-from datetime import date, datetime
 
 
 class MyPizzaTester(MyTestCase):

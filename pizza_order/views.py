@@ -17,6 +17,7 @@ class PizzaCreateListView(ListCreateAPIView):
     def get_serializer_context(self):
         return {'ordered_by': self.request.user}
 
+
 class PizzaDetailView(RetrieveDestroyAPIView):
     """
     View for deleting and getting single pizzas
