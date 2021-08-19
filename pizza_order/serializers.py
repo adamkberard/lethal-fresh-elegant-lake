@@ -6,6 +6,8 @@ from rest_framework import serializers
 
 from .models import PizzaOrder
 
+from dateutil import parser
+
 
 class PizzaOrderSerializer(serializers.Serializer):
     class Meta:
@@ -46,7 +48,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         if response.status_code != 201:
             raise serializers.ValidationError()
         responseData = json.loads(response.content)
-        return responseData['Table_No'], responseData['Order_ID']
+        return responseData['Table_No'], responseData['Order_ID'], responseData['Timestamp']
 
     def attemptToSendPizzaOrder(self, pizzaOrder, token):
         # We try sending the pizza order to the pizzeria 5 times
@@ -54,8 +56,8 @@ class PizzaOrderSerializer(serializers.Serializer):
         attempts = 3
         for i in range(attempts):
             try:
-                table_number, order_id = self.sendPizzaOrder(pizzaOrder, token)
-                return table_number, order_id
+                table_number, order_id, timestamp = self.sendPizzaOrder(pizzaOrder, token)
+                return table_number, order_id, timestamp
             except serializers.ValidationError:
                 # It pretty much only fails because the table_no is taken, which
                 # shouldn't happen since my table numbers are based on the id's
@@ -79,10 +81,11 @@ class PizzaOrderSerializer(serializers.Serializer):
             ordered_by=self.context.get('ordered_by'))
 
         token = self.pizzeriaLogin()
-        table_number, order_number = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
+        table_number, order_number, timestamp = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
 
         tempPizzaOrder.order_id = order_number
         tempPizzaOrder.table_number = table_number
+        tempPizzaOrder.timestamp = parser.parse(timestamp)
         tempPizzaOrder.save()
         return tempPizzaOrder
 
@@ -90,4 +93,5 @@ class PizzaOrderSerializer(serializers.Serializer):
         rep = super().to_representation(instance)
         rep['Order_ID'] = instance.order_id
         rep['Table_No'] = instance.table_number
+        rep['Timestamp'] = instance.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
         return rep

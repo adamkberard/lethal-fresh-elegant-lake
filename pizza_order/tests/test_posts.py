@@ -31,6 +31,7 @@ class Test_Post_Single_Pizza(MyPizzaTester):
 
         self.assertIn('Order_ID', responseData)
         self.assertGreaterEqual(responseData['Table_No'], 30000)
+        self.assertIn('Timestamp', responseData)
 
     def test_post_every_pizza(self):
         authUser = CustomUserFactory()
@@ -60,6 +61,7 @@ class Test_Post_Single_Pizza(MyPizzaTester):
                     self.assertIn('Order_ID', responseData)
                     self.assertGreaterEqual(responseData['Table_No'], 30000)
                     self.assertNotIn(responseData['Table_No'], table_numbers)
+                    self.assertIn('Timestamp', responseData)
                     table_numbers.append(responseData['Table_No'])
 
 

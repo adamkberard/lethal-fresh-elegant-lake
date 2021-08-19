@@ -6,6 +6,8 @@ from my_auth.tests.factories import CustomUserFactory
 
 from ..models import PizzaOrder
 
+from datetime import datetime
+
 
 class Test_Get_Single_Pizza(MyTestCase):
     def test_get_single_pizza(self):
@@ -15,7 +17,8 @@ class Test_Get_Single_Pizza(MyTestCase):
             crust=PizzaOrder.CRUST_THIN,
             size=PizzaOrder.SIZE_LARGE,
             table_number=30000,
-            ordered_by=authUser
+            ordered_by=authUser,
+            timestamp=datetime.now()
         )
 
         client = APIClient()
@@ -44,7 +47,8 @@ class Test_Get_Single_Pizza(MyTestCase):
                         crust=crust,
                         size=size,
                         table_number=30000,
-                        ordered_by=authUser
+                        ordered_by=authUser,
+                        timestamp=datetime.now()
                     )
                     client = APIClient()
                     client.force_authenticate(user=authUser)
@@ -60,6 +64,7 @@ class Test_Get_Single_Pizza(MyTestCase):
                     self.assertEqual(responseData[0]['crust'], crust)
                     self.assertEqual(responseData[0]['Order_ID'], pizza.order_id)
                     self.assertEqual(responseData[0]['Table_No'], 30000)
+                    self.assertIn('Timestamp', responseData[0])
 
                     # Now delete the queryset so it starts fresh every loop
                     PizzaOrder.objects.all().delete()
@@ -73,14 +78,16 @@ class Test_Get_Many_Pizzas(MyTestCase):
             crust=PizzaOrder.CRUST_THIN,
             size=PizzaOrder.SIZE_LARGE,
             table_number=30000,
-            ordered_by=authUser
+            ordered_by=authUser,
+            timestamp=datetime.now()
         )
         pizzaTwo = PizzaOrder.objects.create(
             flavor=PizzaOrder.FLAVOR_REGINA,
             crust=PizzaOrder.CRUST_THIN,
             size=PizzaOrder.SIZE_MEDIUM,
             table_number=30001,
-            ordered_by=authUser
+            ordered_by=authUser,
+            timestamp=datetime.now()
         )
 
         client = APIClient()
@@ -97,9 +104,11 @@ class Test_Get_Many_Pizzas(MyTestCase):
         self.assertEqual(responseData[0]['crust'], PizzaOrder.CRUST_THIN)
         self.assertEqual(responseData[0]['Order_ID'], pizzaOne.order_id)
         self.assertEqual(responseData[0]['Table_No'], 30000)
+        self.assertIn('Timestamp', responseData[0])
 
         self.assertEqual(responseData[1]['flavor'], PizzaOrder.FLAVOR_REGINA)
         self.assertEqual(responseData[1]['size'], PizzaOrder.SIZE_MEDIUM)
         self.assertEqual(responseData[1]['crust'], PizzaOrder.CRUST_THIN)
         self.assertEqual(responseData[1]['Order_ID'], pizzaTwo.order_id)
         self.assertEqual(responseData[1]['Table_No'], 30001)
+        self.assertIn('Timestamp', responseData[1])

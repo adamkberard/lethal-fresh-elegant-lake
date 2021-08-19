@@ -4,6 +4,8 @@ from httmock import urlmatch
 
 from core.MyTestCase import MyTestCase
 
+from datetime import date, datetime
+
 
 class MyPizzaTester(MyTestCase):
     @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/auth')
@@ -18,7 +20,8 @@ class MyPizzaTester(MyTestCase):
     def pizza_order_mock(self, caught_url, request):
         caughtDict = json.loads(request.body)
         caughtDict['Order_ID'] = int(caughtDict['Table_No']) - 30000
-        caughtDict['Timestamp'] = "2021-08-16T02:37:41.353941"
+        now = datetime.now()
+        caughtDict['Timestamp'] = now.strftime("%Y-%m-%dT%H:%M:%S.%f")
         return {
             'status_code': 201,
             'content': caughtDict
