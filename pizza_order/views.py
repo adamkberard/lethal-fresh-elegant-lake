@@ -1,6 +1,7 @@
 import requests
-from rest_framework import status
+from rest_framework import authentication, status
 from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .models import PizzaOrder
@@ -11,6 +12,8 @@ class PizzaCreateListView(ListCreateAPIView):
     """
     View for creating and getting pizza orders
     """
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = [authentication.TokenAuthentication]
     serializer_class = PizzaOrderSerializer
     queryset = PizzaOrder.objects.all()
 
@@ -25,6 +28,8 @@ class PizzaDetailView(RetrieveDestroyAPIView):
     """
     View for deleting and getting single pizzas
     """
+    permission_classes = (IsAuthenticated, )
+    authentication_classes = [authentication.TokenAuthentication]
     serializer_class = PizzaOrderSerializer
     queryset = PizzaOrder.objects.all()
     lookup_field = 'order_id'
