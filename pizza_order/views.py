@@ -23,6 +23,15 @@ class PizzaCreateListView(ListCreateAPIView):
     def get_serializer_context(self):
         return {'ordered_by': self.request.user}
 
+    def get_serializer(self, *args, **kwargs):
+        print("HERE")
+        print(self.request.data)
+        if isinstance(self.request.data, list):
+            print("List")
+            return super().get_serializer(data=self.request.data, many=True)
+        else:
+            super().get_serializer(self, args, kwargs)
+
 
 class PizzaDetailView(RetrieveDestroyAPIView):
     """

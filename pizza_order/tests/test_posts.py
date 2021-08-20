@@ -125,3 +125,35 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
 
         # Now we check the data
         self.assertEqual(responseData['error'], "Error sending order to pizzeria.")
+
+
+class Test_Post_Many_Pizzas(MyPizzaTester):
+    def test_post_same_pizza_many_times(self):
+        authUser = CustomUserFactory()
+        numPizzas = 5
+        data = []
+        for i in range(numPizzas):
+            data.append({
+                'flavor': 'Hawaii',
+                'size': 'Large',
+                'crust': 'Thin'
+            })
+        client = APIClient()
+        client.force_authenticate(user=authUser)
+        with HTTMock(self.login_mock, self.pizza_order_mock):
+            response = client.post(reverse('pizza_create_list'), data=data, format='json')
+
+        self.assertResponse201(response)
+        responseData = self.loadJSONSafely(response)
+        
+
+        # Now we check the data
+        self.assertEqual(len(responseData), numPizzas)
+        for i in range(numPizzas):
+            self.assertEqual(responseData[i]['flavor'], 'Hawaii')
+            self.assertEqual(responseData[i]['size'], 'Large')
+            self.assertEqual(responseData[i]['crust'], 'Thin')
+
+            self.assertIn('Order_ID', responseData[i])
+            self.assertGreaterEqual(responseData[i]['Table_No'], 30000)
+            self.assertIn('Timestamp', responseData[i])
