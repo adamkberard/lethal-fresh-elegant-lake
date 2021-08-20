@@ -145,7 +145,6 @@ class Test_Post_Many_Pizzas(MyPizzaTester):
 
         self.assertResponse201(response)
         responseData = self.loadJSONSafely(response)
-        
 
         # Now we check the data
         self.assertEqual(len(responseData), numPizzas)
