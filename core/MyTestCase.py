@@ -13,6 +13,10 @@ class MyTestCase(TestCase):
     def assertResponse201(self, response):
         self.assertEqual(response.status_code, 201)
 
+    # No Content
+    def assertResponse204(self, response):
+        self.assertEqual(response.status_code, 204)
+
     # Created
     def assertResponse400(self, response):
         self.assertEqual(response.status_code, 400)

@@ -26,6 +26,18 @@ class MyPizzaTester(MyTestCase):
             'content': caughtDict
         }
 
+    @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/orders')
+    def pizza_delete_mock(self, caught_url, request):
+        return {
+            'status_code': 200
+        }
+
+    @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/orders')
+    def pizza_delete_mock_fail(self, caught_url, request):
+        return {
+            'status_code': 400
+        }
+
     @urlmatch(netloc=r'order-pizza-api.herokuapp.com', path=r'/api/auth')
     def fail_login_mock(self, caught_url, request):
         return {'status_code': 400}
