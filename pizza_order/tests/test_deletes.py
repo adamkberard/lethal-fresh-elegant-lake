@@ -68,3 +68,5 @@ class Test_Delete_Single_Pizza(MyPizzaTester):
             self.assertResponse204(response)
             totalOrders -= 1
             self.assertEqual(PizzaOrder.objects.all().count(), totalOrders)
+
+        self.assertEqual(PizzaOrder.objects.all().count(), 0)
