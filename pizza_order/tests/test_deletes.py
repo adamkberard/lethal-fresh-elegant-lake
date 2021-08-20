@@ -1,13 +1,13 @@
 from datetime import datetime
 
 from django.urls import reverse
+from httmock import HTTMock
 from rest_framework.test import APIClient
 
-from .MyPizzaTester import MyPizzaTester
 from my_auth.tests.factories import CustomUserFactory
-from httmock import HTTMock
 
 from ..models import PizzaOrder
+from .MyPizzaTester import MyPizzaTester
 
 timeFormatStr = "%Y-%m-%dT%H:%M:%S.%f"
 
