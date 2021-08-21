@@ -18,10 +18,10 @@ class PizzaCreateListView(ListCreateAPIView):
     queryset = PizzaOrder.objects.all()
 
     def get_queryset(self):
-        return super().get_queryset().filter(ordered_by=self.request.user)
+        return super().get_queryset().filter(Ordered_By=self.request.user)
 
     def get_serializer_context(self):
-        return {'ordered_by': self.request.user}
+        return {'Ordered_By': self.request.user}
 
     def get_serializer(self, *args, **kwargs):
         if self.request.method == 'GET':
@@ -46,15 +46,15 @@ class PizzaDetailView(RetrieveDestroyAPIView):
     authentication_classes = [authentication.TokenAuthentication]
     serializer_class = PizzaOrderSerializer
     queryset = PizzaOrder.objects.all()
-    lookup_field = 'order_id'
+    lookup_field = 'Order_ID'
 
     def get_queryset(self):
-        return super().get_queryset().filter(ordered_by=self.request.user)
+        return super().get_queryset().filter(Ordered_By=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
 
-        url = 'https://order-pizza-api.herokuapp.com/api/orders/' + str(kwargs['order_id'])
+        url = 'https://order-pizza-api.herokuapp.com/api/orders/' + str(kwargs['Order_ID'])
         response = requests.delete(url=url)
         if response.status_code != 200:
             error = {'non_field_error': 'Could not cancel order with pizzeria.'}

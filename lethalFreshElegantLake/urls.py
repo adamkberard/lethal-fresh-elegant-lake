@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
+
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title="Swagger Docs")
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('my_auth.urls')),
     path('order/', include('pizza_order.urls')),
+    url(r'^docs/', schema_view),
 ]

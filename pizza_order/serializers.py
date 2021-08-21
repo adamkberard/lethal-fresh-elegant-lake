@@ -12,9 +12,12 @@ class PizzaOrderSerializer(serializers.Serializer):
     class Meta:
         module = PizzaOrder
 
-    flavor = serializers.ChoiceField([item[0] for item in PizzaOrder.FLAVOR_CHOICES])
-    size = serializers.ChoiceField([item[0] for item in PizzaOrder.SIZE_CHOICES])
-    crust = serializers.ChoiceField([item[0] for item in PizzaOrder.CRUST_CHOICES])
+    Flavor = serializers.ChoiceField([item[0] for item in PizzaOrder.FLAVOR_CHOICES])
+    Size = serializers.ChoiceField([item[0] for item in PizzaOrder.SIZE_CHOICES])
+    Crust = serializers.ChoiceField([item[0] for item in PizzaOrder.CRUST_CHOICES])
+    Order_ID = serializers.IntegerField(read_only=True)
+    Table_No = serializers.IntegerField(read_only=True)
+    Timestamp = serializers.DateTimeField(read_only=True)
 
     # Might want to check that I can parse the json response and that the token is there
     def pizzeriaLogin(self):
@@ -36,12 +39,12 @@ class PizzaOrderSerializer(serializers.Serializer):
     def sendPizzaOrder(self, pizzaOrder, token):
         hed = {'Authorization': 'Bearer ' + token}
         url = 'https://order-pizza-api.herokuapp.com/api/orders'
-        pizzaOrder.table_number = pizzaOrder.id + 30000
+        pizzaOrder.Table_No = pizzaOrder.id + 30000
         data = {
-            'Crust': pizzaOrder.crust,
-            'Flavor': pizzaOrder.flavor,
-            'Size': pizzaOrder.size,
-            'Table_No': pizzaOrder.table_number,
+            'Crust': pizzaOrder.Crust,
+            'Flavor': pizzaOrder.Flavor,
+            'Size': pizzaOrder.Size,
+            'Table_No': pizzaOrder.Table_No,
         }
         response = requests.post(url=url, json=data, headers=hed)
         if response.status_code != 201:
@@ -62,7 +65,7 @@ class PizzaOrderSerializer(serializers.Serializer):
                 # shouldn't happen since my table numbers are based on the id's
                 # which have to be unique, but if it does come back with that error
                 # i'll just randomly add some amount to the table number and try that
-                pizzaOrder.table_number += random.randint(100, 10000)
+                pizzaOrder.Table_No += random.randint(100, 10000)
                 # The third time it fails just give up
                 if(i == attempts - 1):
                     raise serializers.ValidationError(
@@ -74,10 +77,11 @@ class PizzaOrderSerializer(serializers.Serializer):
         # so I should try to find a way to utilize that rather than just running
         # up the table_no forever
         tempPizzaOrder = PizzaOrder.objects.create(
-            flavor=validated_data.get('flavor'),
-            size=validated_data.get('size'),
-            crust=validated_data.get('crust'),
-            ordered_by=self.context.get('ordered_by'))
+            Flavor=validated_data.get('Flavor'),
+            Size=validated_data.get('Size'),
+            Crust=validated_data.get('Crust'),
+            Ordered_By=self.context.get('Ordered_By')
+        )
 
         token = self.pizzeriaLogin()
         table_number, order_number, timestamp = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
@@ -88,9 +92,9 @@ class PizzaOrderSerializer(serializers.Serializer):
         tempPizzaOrder.save()
         return tempPizzaOrder
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep['Order_ID'] = instance.order_id
-        rep['Table_No'] = instance.table_number
-        rep['Timestamp'] = instance.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
-        return rep
+    # def to_representation(self, instance):
+     #    rep = super().to_representation(instance)
+      #   rep['Order_ID'] = instance.order_id
+       #  rep['Table_No'] = instance.table_number
+        # rep['Timestamp'] = instance.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
+        # return rep

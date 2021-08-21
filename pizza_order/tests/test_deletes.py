@@ -18,19 +18,19 @@ class Test_Delete_Single_Pizza(MyPizzaTester):
         authUser = CustomUserFactory()
         # I make up an order id that would normall be sent by the pizzeria
         pizza = PizzaOrder.objects.create(
-            flavor=PizzaOrder.FLAVOR_HAWAII,
-            crust=PizzaOrder.CRUST_THIN,
-            size=PizzaOrder.SIZE_LARGE,
-            table_number=30000,
-            ordered_by=authUser,
-            timestamp=datetime.now()
+            Flavor=PizzaOrder.FLAVOR_HAWAII,
+            Crust=PizzaOrder.CRUST_THIN,
+            Size=PizzaOrder.SIZE_LARGE,
+            Table_No=30000,
+            Ordered_By=authUser,
+            Timestamp=datetime.now()
         )
-        pizza.order_id = pizza.id
+        pizza.Order_ID = pizza.id
         pizza.save()
 
         client = APIClient()
         client.force_authenticate(user=authUser)
-        url = reverse('pizza_detail', args=(pizza.order_id,))
+        url = reverse('pizza_detail', args=(pizza.Order_ID,))
         with HTTMock(self.pizza_delete_mock):
             response = client.delete(url)
 
@@ -44,23 +44,23 @@ class Test_Delete_Single_Pizza(MyPizzaTester):
             for size in [x[0] for x in PizzaOrder.SIZE_CHOICES]:
                 for crust in [x[0] for x in PizzaOrder.CRUST_CHOICES]:
                     pizza = PizzaOrder.objects.create(
-                        flavor=flavor,
-                        crust=crust,
-                        size=size,
-                        table_number=30000,
-                        ordered_by=authUser,
-                        timestamp=datetime.now()
+                        Flavor=flavor,
+                        Crust=crust,
+                        Size=size,
+                        Table_No=30000,
+                        Ordered_By=authUser,
+                        Timestamp=datetime.now()
                     )
-                    pizza.order_id = pizza.id
+                    pizza.Order_ID = pizza.id
                     pizza.save()
-                    order_ids.append(pizza.order_id)
+                    order_ids.append(pizza.Order_ID)
 
         client = APIClient()
         client.force_authenticate(user=authUser)
         totalOrders = len(order_ids)
 
         for order_id in order_ids:
-            pizza = PizzaOrder.objects.get(order_id=order_id)
+            pizza = PizzaOrder.objects.get(Order_ID=order_id)
             url = reverse('pizza_detail', args=(order_id,))
             with HTTMock(self.pizza_delete_mock):
                 response = client.delete(url)

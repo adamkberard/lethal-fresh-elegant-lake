@@ -12,9 +12,9 @@ class Test_Post_Single_Pizza(MyPizzaTester):
     def test_post_single_pizza(self):
         authUser = CustomUserFactory()
         data = {
-            'flavor': 'Hawaii',
-            'size': 'Large',
-            'crust': 'Thin'
+            'Flavor': 'Hawaii',
+            'Size': 'Large',
+            'Crust': 'Thin'
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
@@ -25,9 +25,9 @@ class Test_Post_Single_Pizza(MyPizzaTester):
         responseData = self.loadJSONSafely(response)
 
         # Now we check the data
-        self.assertEqual(responseData['flavor'], 'Hawaii')
-        self.assertEqual(responseData['size'], 'Large')
-        self.assertEqual(responseData['crust'], 'Thin')
+        self.assertEqual(responseData['Flavor'], 'Hawaii')
+        self.assertEqual(responseData['Size'], 'Large')
+        self.assertEqual(responseData['Crust'], 'Thin')
 
         self.assertIn('Order_ID', responseData)
         self.assertGreaterEqual(responseData['Table_No'], 30000)
@@ -40,9 +40,9 @@ class Test_Post_Single_Pizza(MyPizzaTester):
             for size in [x[0] for x in PizzaOrder.SIZE_CHOICES]:
                 for crust in [x[0] for x in PizzaOrder.CRUST_CHOICES]:
                     data = {
-                        'flavor': flavor,
-                        'size': size,
-                        'crust': crust
+                        'Flavor': flavor,
+                        'Size': size,
+                        'Crust': crust
                     }
                     client = APIClient()
                     client.force_authenticate(user=authUser)
@@ -54,9 +54,9 @@ class Test_Post_Single_Pizza(MyPizzaTester):
                     responseData = self.loadJSONSafely(response)
 
                     # Now we check the data
-                    self.assertEqual(responseData['flavor'], flavor)
-                    self.assertEqual(responseData['size'], size)
-                    self.assertEqual(responseData['crust'], crust)
+                    self.assertEqual(responseData['Flavor'], flavor)
+                    self.assertEqual(responseData['Size'], size)
+                    self.assertEqual(responseData['Crust'], crust)
 
                     self.assertIn('Order_ID', responseData)
                     self.assertGreaterEqual(responseData['Table_No'], 30000)
@@ -70,9 +70,9 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
     def test_post_single_pizza_bad_table_no_once(self):
         authUser = CustomUserFactory()
         data = {
-            'flavor': 'Hawaii',
-            'size': 'Large',
-            'crust': 'Thin'
+            'Flavor': 'Hawaii',
+            'Size': 'Large',
+            'Crust': 'Thin'
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
@@ -83,9 +83,9 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         responseData = self.loadJSONSafely(response)
 
         # Now we check the data
-        self.assertEqual(responseData['flavor'], 'Hawaii')
-        self.assertEqual(responseData['size'], 'Large')
-        self.assertEqual(responseData['crust'], 'Thin')
+        self.assertEqual(responseData['Flavor'], 'Hawaii')
+        self.assertEqual(responseData['Size'], 'Large')
+        self.assertEqual(responseData['Crust'], 'Thin')
 
         self.assertIn('Order_ID', responseData)
         self.assertGreaterEqual(responseData['Table_No'], 30000)
@@ -93,9 +93,9 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
     def test_post_single_pizza_bad_login(self):
         authUser = CustomUserFactory()
         data = {
-            'flavor': 'Hawaii',
-            'size': 'Large',
-            'crust': 'Thin'
+            'Flavor': 'Hawaii',
+            'Size': 'Large',
+            'Crust': 'Thin'
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
@@ -111,9 +111,9 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
     def test_post_single_pizza_bad_table_number(self):
         authUser = CustomUserFactory()
         data = {
-            'flavor': 'Hawaii',
-            'size': 'Large',
-            'crust': 'Thin'
+            'Flavor': 'Hawaii',
+            'Size': 'Large',
+            'Crust': 'Thin'
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
@@ -134,9 +134,9 @@ class Test_Post_Many_Pizzas(MyPizzaTester):
         data = []
         for i in range(numPizzas):
             data.append({
-                'flavor': 'Hawaii',
-                'size': 'Large',
-                'crust': 'Thin'
+                'Flavor': 'Hawaii',
+                'Size': 'Large',
+                'Crust': 'Thin'
             })
         client = APIClient()
         client.force_authenticate(user=authUser)
@@ -149,9 +149,9 @@ class Test_Post_Many_Pizzas(MyPizzaTester):
         # Now we check the data
         self.assertEqual(len(responseData), numPizzas)
         for i in range(numPizzas):
-            self.assertEqual(responseData[i]['flavor'], 'Hawaii')
-            self.assertEqual(responseData[i]['size'], 'Large')
-            self.assertEqual(responseData[i]['crust'], 'Thin')
+            self.assertEqual(responseData[i]['Flavor'], 'Hawaii')
+            self.assertEqual(responseData[i]['Size'], 'Large')
+            self.assertEqual(responseData[i]['Crust'], 'Thin')
 
             self.assertIn('Order_ID', responseData[i])
             self.assertGreaterEqual(responseData[i]['Table_No'], 30000)

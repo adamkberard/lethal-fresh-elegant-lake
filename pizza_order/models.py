@@ -29,28 +29,28 @@ class PizzaOrder(models.Model):
         (CRUST_THIN, 'Thin')
     ]
 
-    flavor = models.CharField(
+    Flavor = models.CharField(
         max_length=16,
         choices=FLAVOR_CHOICES,
         default=FLAVOR_HAWAII
     )
 
-    size = models.CharField(
+    Size = models.CharField(
         max_length=6,
         choices=SIZE_CHOICES,
         default=SIZE_MEDIUM
     )
 
-    crust = models.CharField(
+    Crust = models.CharField(
         max_length=4,
         choices=CRUST_CHOICES,
         default=CRUST_THIN
     )
 
-    table_number = models.IntegerField(MinValueValidator(30000), blank=True, null=True)
-    order_id = models.IntegerField(blank=True, null=True)
-    timestamp = models.DateTimeField(blank=True, null=True)
+    Table_No = models.IntegerField(MinValueValidator(30000), blank=True, null=True)
+    Order_ID = models.IntegerField(blank=True, null=True)
+    Timestamp = models.DateTimeField(blank=True, null=True)
 
-    ordered_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+    Ordered_By = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    on_delete=models.CASCADE,
                                    related_name="ordered_by")

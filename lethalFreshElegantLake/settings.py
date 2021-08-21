@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
 
     # Local Apps
     'pizza_order',
@@ -76,6 +77,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'staticfiles': 'django.templatetags.static',
+            },
         },
     },
 ]
@@ -153,3 +157,5 @@ HASHIDS = {
     'SALT': os.environ.get('SALT'),
     'MIN_LENGTH': 8
 }
+
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
