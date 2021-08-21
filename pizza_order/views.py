@@ -52,10 +52,13 @@ class PizzaDetailView(RetrieveDestroyAPIView):
         return super().get_queryset().filter(ordered_by=self.request.user)
 
     def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
         url = 'https://order-pizza-api.herokuapp.com/api/orders/' + str(kwargs['order_id'])
         response = requests.delete(url=url)
         if response.status_code != 200:
             error = {'non_field_error': 'Could not cancel order with pizzeria.'}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        return super().destroy(request, args, kwargs)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
