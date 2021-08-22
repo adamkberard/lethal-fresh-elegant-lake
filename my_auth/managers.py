@@ -45,7 +45,7 @@ class CustomUserManager(BaseUserManager):
     # but could be in the future if username's become supported/needed
     def generateUsername(self, range=1000000):
         username = "User{}".format(random.randint(range, (range * 10) - 1))
-        
+
         # This isn't the most efficient way to create usernames, but it randomly
         # appends a number to the string 'User' until it is unique in the database.
         while self.get_queryset().filter(username=username).count() > 0:

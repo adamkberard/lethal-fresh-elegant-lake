@@ -1,7 +1,4 @@
-from collections import OrderedDict
-
 import requests
-from drf_yasg import openapi
 from rest_framework import authentication, status
 from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -16,7 +13,7 @@ class PizzaCreateListView(ListCreateAPIView):
     View for creating and getting pizza orders.
     Must be authenticated
     **POSTS can also accept a LIST of pizza orders**
-    **This will respond with a list of the finalized orders** 
+    **This will respond with a list of the finalized orders**
     """
     permission_classes = (IsAuthenticated, )
     authentication_classes = [authentication.TokenAuthentication]
