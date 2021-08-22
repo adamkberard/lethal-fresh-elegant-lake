@@ -2,5 +2,5 @@ from django.contrib import admin
 
 from .models import PizzaOrder
 
-# Register your models here.
+# This is for the admin site which is helpful
 admin.site.register(PizzaOrder)

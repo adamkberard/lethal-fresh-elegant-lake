@@ -51,6 +51,7 @@ class PizzaOrder(models.Model):
     Order_ID = models.IntegerField(blank=True, null=True)
     Timestamp = models.DateTimeField(blank=True, null=True)
 
+    # This field ensure I can return a users pizza orders
     Ordered_By = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    on_delete=models.CASCADE,
                                    related_name="ordered_by")

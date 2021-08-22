@@ -79,6 +79,8 @@ class Test_Post_Single_Pizza(MyPizzaTester):
 
 
 class Test_Post_Single_Pizza_Fail(MyPizzaTester):
+    # This test makes sure if the first table_no is rejected, we still
+    # can make a successfull order on one of the subsequent attempts
     def test_post_single_pizza_bad_table_no_once(self):
         authUser = CustomUserFactory()
         testFlavor = 'Hawaii'
@@ -91,7 +93,7 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
-        with HTTMock(self.login_mock, self.pizza_order_mock):
+        with HTTMock(self.login_mock, self.pizza_order_mock_bad_table_number_once):
             response = client.post(reverse('pizza_create_list'), data=data, format='json')
 
         self.assertResponse201(response)
@@ -108,10 +110,13 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         self.assertEqual(responseData['Size'], pizza.Size)
         self.assertEqual(responseData['Crust'], pizza.Crust)
         self.assertEqual(responseData['Table_No'], pizza.Table_No)
-        self.assertEqual(responseData['Table_No'], pizza.Table_No)
         self.assertEqual(responseData['Order_ID'], pizza.Order_ID)
         self.assertEqual(responseData['Timestamp'], pizza.timeAsString())
 
+        # One extra check to ensure the table_no is above 31000 to show it is the second attempt
+        self.assertGreater(pizza.Table_No, 31000)
+
+    # This test makes sure we can handle a bad pizza login gracefully
     def test_post_single_pizza_bad_login(self):
         authUser = CustomUserFactory()
         data = {
@@ -130,7 +135,11 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         # Now we check the data
         self.assertEqual(responseData['error'], "Error logging in to pizzeria.")
 
-    def test_post_single_pizza_bad_table_number(self):
+        # Make sure we didn't save the pizza order since the pizzeria didn't get it
+        self.assertEqual(PizzaOrder.objects.all().count(), 0)
+
+    # This test makes sure we can handle a pizza login with no return token gracefully
+    def test_post_single_pizza_no_token(self):
         authUser = CustomUserFactory()
         data = {
             'Flavor': 'Hawaii',
@@ -139,15 +148,39 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         }
         client = APIClient()
         client.force_authenticate(user=authUser)
-        with HTTMock(self.login_mock, self.pizza_order_mock_bad_table_number):
+        with HTTMock(self.login_mock_bad_token_return):
             response = client.post(reverse('pizza_create_list'), data=data, format='json')
 
         self.assertResponse400(response)
         responseData = self.loadJSONSafely(response)
 
         # Now we check the data
-        self.assertEqual(responseData['error'], "Error sending order to pizzeria.")
+        self.assertEqual(responseData['error'], "Did not receive a token from pizzeria.")
 
+        # Make sure we didn't save the pizza order since the pizzeria didn't get it
+        self.assertEqual(PizzaOrder.objects.all().count(), 0)
+
+    # This test makes sure we can handle a bad json response from the pizzaria
+    def test_post_single_pizza_bad_json_response(self):
+        authUser = CustomUserFactory()
+        data = {
+            'Flavor': 'Hawaii',
+            'Size': 'Large',
+            'Crust': 'Thin'
+        }
+        client = APIClient()
+        client.force_authenticate(user=authUser)
+        with HTTMock(self.login_mock_bad_json_return):
+            response = client.post(reverse('pizza_create_list'), data=data, format='json')
+
+        self.assertResponse400(response)
+        responseData = self.loadJSONSafely(response)
+
+        # Now we check the data
+        self.assertEqual(responseData['error'], "Did not receive valid json from pizzeria.")
+
+        # Make sure we didn't save the pizza order since the pizzeria didn't get it
+        self.assertEqual(PizzaOrder.objects.all().count(), 0)
 
 class Test_Post_Many_Pizzas(MyPizzaTester):
     def test_post_same_pizza_many_times(self):
