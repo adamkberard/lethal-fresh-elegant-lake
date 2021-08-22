@@ -54,3 +54,6 @@ class PizzaOrder(models.Model):
     Ordered_By = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    on_delete=models.CASCADE,
                                    related_name="ordered_by")
+
+    def timeAsString(self):
+        return self.Timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")

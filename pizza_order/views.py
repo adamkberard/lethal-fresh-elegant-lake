@@ -24,15 +24,6 @@ class PizzaCreateListView(ListCreateAPIView):
         return {'Ordered_By': self.request.user}
 
     def get_serializer(self, *args, **kwargs):
-        if self.request.method == 'GET':
-            return super().get_serializer(args, kwargs)
-
-        if isinstance(self.request.data, list):
-            return super().get_serializer(data=self.request.data, many=True)
-        else:
-            return super().get_serializer(data=self.request.data)
-
-    def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get('data', {}), list):
             kwargs['many'] = True
         return super().get_serializer(*args, **kwargs)

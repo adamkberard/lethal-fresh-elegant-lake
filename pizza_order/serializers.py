@@ -86,15 +86,13 @@ class PizzaOrderSerializer(serializers.Serializer):
         token = self.pizzeriaLogin()
         table_number, order_number, timestamp = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
 
-        tempPizzaOrder.order_id = order_number
-        tempPizzaOrder.table_number = table_number
-        tempPizzaOrder.timestamp = parser.parse(timestamp)
+        tempPizzaOrder.Order_ID = order_number
+        tempPizzaOrder.Table_No = table_number
+        tempPizzaOrder.Timestamp = parser.parse(timestamp)
         tempPizzaOrder.save()
         return tempPizzaOrder
 
-    # def to_representation(self, instance):
-     #    rep = super().to_representation(instance)
-      #   rep['Order_ID'] = instance.order_id
-       #  rep['Table_No'] = instance.table_number
-        # rep['Timestamp'] = instance.timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
-        # return rep
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['Timestamp'] = instance.Timestamp.strftime("%Y-%m-%dT%H:%M:%S.%f")
+        return rep
