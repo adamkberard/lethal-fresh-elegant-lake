@@ -1,6 +1,6 @@
 import json
-from json.decoder import JSONDecodeError
 import random
+from json.decoder import JSONDecodeError
 
 import requests
 from dateutil import parser
@@ -38,7 +38,8 @@ class PizzaOrderSerializer(serializers.Serializer):
             responseData = json.loads(response.content)
         except JSONDecodeError:
             pizzaOrder.delete()
-            raise serializers.ValidationError({'error': "Did not receive valid json from pizzeria."})
+            raise serializers.ValidationError({
+                'error': "Did not receive valid json from pizzeria."})
 
         if 'access_token' not in responseData:
             pizzaOrder.delete()
@@ -50,9 +51,9 @@ class PizzaOrderSerializer(serializers.Serializer):
         hed = {'Authorization': 'Bearer ' + token}
         url = 'https://order-pizza-api.herokuapp.com/api/orders'
 
-        # If the pizza order number is not set yet, we set it to the 
+        # If the pizza order number is not set yet, we set it to the
         # unique id and add 30000, otherwise it is fine
-        if pizzaOrder.Table_No == None:
+        if pizzaOrder.Table_No is None:
             pizzaOrder.Table_No = pizzaOrder.id + 30000
         data = {
             'Crust': pizzaOrder.Crust,
@@ -65,7 +66,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         # Make sure the order was created
         if response.status_code != 201:
             raise serializers.ValidationError()
-        
+
         # Make sure we got a well formed json response
         try:
             responseData = json.loads(response.content)

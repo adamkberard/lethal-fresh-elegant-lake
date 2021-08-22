@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'rest_framework',
     'rest_framework.authtoken',
-    'rest_framework_swagger',
+    'drf_yasg',
 
     # Local Apps
     'pizza_order',
@@ -157,5 +157,3 @@ HASHIDS = {
     'SALT': os.environ.get('SALT'),
     'MIN_LENGTH': 8
 }
-
-REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}

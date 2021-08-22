@@ -182,6 +182,7 @@ class Test_Post_Single_Pizza_Fail(MyPizzaTester):
         # Make sure we didn't save the pizza order since the pizzeria didn't get it
         self.assertEqual(PizzaOrder.objects.all().count(), 0)
 
+
 class Test_Post_Many_Pizzas(MyPizzaTester):
     def test_post_same_pizza_many_times(self):
         authUser = CustomUserFactory()

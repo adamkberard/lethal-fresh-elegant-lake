@@ -7,11 +7,11 @@ from .models import CustomUser
 
 
 class MyRegisterSerializer(serializers.Serializer):
-    class Meta:
-        module = CustomUser
-
     email = serializers.EmailField()
     password = serializers.CharField(validators=[validate_password])
+
+    class Meta:
+        module = CustomUser
 
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
@@ -22,11 +22,11 @@ class MyRegisterSerializer(serializers.Serializer):
 
 
 class MyLogInSerializer(serializers.Serializer):
+    email = serializers.EmailField(write_only=True)
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         module = CustomUser
-
-    email = serializers.EmailField()
-    password = serializers.CharField()
 
     def save(self, **kwargs):
         return self.validated_data

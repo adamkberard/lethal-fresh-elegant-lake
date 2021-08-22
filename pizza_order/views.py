@@ -10,7 +10,7 @@ from .serializers import PizzaOrderSerializer
 
 class PizzaCreateListView(ListCreateAPIView):
     """
-    View for creating and getting pizza orders
+    View for creating and getting pizza orders.
     Must be authenticated
     """
     permission_classes = (IsAuthenticated, )
@@ -27,7 +27,7 @@ class PizzaCreateListView(ListCreateAPIView):
     def get_serializer_context(self):
         return {'Ordered_By': self.request.user}
 
-    # This changes the serializer to work with either single json objects passed in, 
+    # This changes the serializer to work with either single json objects passed in,
     # or lists of json objects so users can order a single pizza or multiple pizzas
     # in the same request
     def get_serializer(self, *args, **kwargs):
@@ -35,9 +35,10 @@ class PizzaCreateListView(ListCreateAPIView):
             kwargs['many'] = True
         return super().get_serializer(*args, **kwargs)
 
+
 class PizzaDetailView(RetrieveDestroyAPIView):
     """
-    View for deleting and getting single pizzas
+    View for deleting and getting single pizzas.
     Must be authenticated
     """
     permission_classes = (IsAuthenticated, )
