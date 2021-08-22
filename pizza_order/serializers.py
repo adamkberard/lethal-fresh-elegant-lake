@@ -98,13 +98,14 @@ class PizzaOrderSerializer(serializers.Serializer):
                 responseData = self.sendPizzaOrder(pizzaOrder, token)
                 return responseData
             except serializers.ValidationError:
-                # The only time sending an error fails is when the table_no already exists
+                # The only time sending an error fails is when the table_no already exists.
                 # This should never happen, but in the event it does we try three times, adding
                 # a random number to the table number in the hopes that one won't be taken.
+                # Table Numbers become useable again after a short time so this won't prevent any
+                # future orders from working.
                 pizzaOrder.Table_No += random.randint(1000, 10000)
 
-                # The third time it fails just give up and deletes out entry for the pizza
-                # order
+                # The third time it fails just give up and deletes our entry for the pizza order
                 if(i == attempts - 1):
                     # Delete the pizza order on our end if the order doesn't go through
                     pizzaOrder.delete()
