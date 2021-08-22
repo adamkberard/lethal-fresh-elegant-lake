@@ -21,7 +21,7 @@ class LoginView(CreateAPIView):
     """
     serializer_class = MyLogInSerializer
 
-    @swagger_auto_schema(responses=({201: loginResponseSchema, 400: 'Bad Request'}))
+    @swagger_auto_schema(responses=({200: loginResponseSchema, 400: 'Bad Request'}))
     def post(self, request):
         return super().post(request)
 

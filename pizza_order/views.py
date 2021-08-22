@@ -4,6 +4,10 @@ from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from collections import OrderedDict
+
 from .models import PizzaOrder
 from .serializers import PizzaOrderSerializer
 
@@ -36,6 +40,13 @@ class PizzaCreateListView(ListCreateAPIView):
         return super().get_serializer(*args, **kwargs)
 
 
+failedDeleteResponseSchema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties=OrderedDict((("non_field_error", openapi.Schema(type=openapi.TYPE_STRING)),)),
+    required=[]
+)
+
+
 class PizzaDetailView(RetrieveDestroyAPIView):
     """
     View for deleting and getting single pizzas.
@@ -51,9 +62,9 @@ class PizzaDetailView(RetrieveDestroyAPIView):
     def get_queryset(self):
         return super().get_queryset().filter(Ordered_By=self.request.user)
 
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-
         # Here is where we delete the order with the pizzeria, if it fails we also
         # do not delete it within our database
         url = 'https://order-pizza-api.herokuapp.com/api/orders/' + str(kwargs['Order_ID'])
