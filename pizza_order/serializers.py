@@ -131,6 +131,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         tempPizzaOrder.Table_No = responseData['Table_No']
         # Beautiful auto-timestamp parser makes the work easy
         tempPizzaOrder.Timestamp = parser.parse(responseData['Timestamp'])
+        print(tempPizzaOrder.Timestamp)
         tempPizzaOrder.save()
 
         return tempPizzaOrder
