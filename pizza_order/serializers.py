@@ -67,6 +67,7 @@ class PizzaOrderSerializer(serializers.Serializer):
         # unique id and add 30000, otherwise it is fine
         if pizzaOrder.Table_No is None:
             pizzaOrder.Table_No = pizzaOrder.id + 30000
+
         data = {
             'Crust': pizzaOrder.Crust,
             'Flavor': pizzaOrder.Flavor,
@@ -120,6 +121,7 @@ class PizzaOrderSerializer(serializers.Serializer):
             Ordered_By=self.context.get('Ordered_By')
         )
 
+        # The pizzeria login returns a token which we will need to post orders
         token = self.pizzeriaLogin(tempPizzaOrder)
         responseData = self.attemptToSendPizzaOrder(tempPizzaOrder, token)
 

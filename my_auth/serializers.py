@@ -7,6 +7,7 @@ from .models import CustomUser
 
 
 class MyRegisterSerializer(serializers.Serializer):
+    """Serializer for registering users."""
     email = serializers.EmailField()
     password = serializers.CharField(validators=[validate_password])
 
@@ -22,6 +23,7 @@ class MyRegisterSerializer(serializers.Serializer):
 
 
 class MyLogInSerializer(serializers.Serializer):
+    """Serializer for logging in users."""
     email = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
 
@@ -33,7 +35,7 @@ class MyLogInSerializer(serializers.Serializer):
 
     def validate(self, data):
         """
-        Gotta make sure the person can be logged in
+        Gotta make sure the person can be logged in with the given credentials
         """
         user = authenticate(username=data['email'], password=data['password'])
         if user is None:
@@ -41,10 +43,8 @@ class MyLogInSerializer(serializers.Serializer):
         return user
 
     def to_representation(self, instance):
-        representation = {}
-
-        # Gotta check if there's a token and create it if not
-        # Then we send the token but in the user one cuz it's easier?
+        rep = {}
+        # This either creates a token for the user, or grabs an existing one
         token, _ = Token.objects.get_or_create(user=instance)
-        representation['access_token'] = str(token)
-        return representation
+        rep['access_token'] = str(token)
+        return rep

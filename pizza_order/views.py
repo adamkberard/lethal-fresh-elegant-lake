@@ -41,13 +41,6 @@ class PizzaCreateListView(ListCreateAPIView):
         return super().get_serializer(*args, **kwargs)
 
 
-failedDeleteResponseSchema = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    properties=OrderedDict((("non_field_error", openapi.Schema(type=openapi.TYPE_STRING)),)),
-    required=[]
-)
-
-
 class PizzaDetailView(RetrieveDestroyAPIView):
     """
     View for deleting and getting single pizzas.

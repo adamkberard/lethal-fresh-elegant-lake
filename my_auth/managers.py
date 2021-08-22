@@ -41,8 +41,13 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
+    # Generates a random username when a user is first created. This isn't used
+    # but could be in the future if username's become supported/needed
     def generateUsername(self, range=1000000):
         username = "User{}".format(random.randint(range, (range * 10) - 1))
+        
+        # This isn't the most efficient way to create usernames, but it randomly
+        # appends a number to the string 'User' until it is unique in the database.
         while self.get_queryset().filter(username=username).count() > 0:
             number = random.randint(range, (range * 10) - 1)
             username = "User{}".format(number)

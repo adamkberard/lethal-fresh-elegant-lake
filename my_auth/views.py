@@ -6,6 +6,7 @@ from rest_framework.generics import CreateAPIView
 
 from .serializers import MyLogInSerializer, MyRegisterSerializer
 
+# This schema is for both login and registration
 loginResponseSchema = openapi.Schema(
     type=openapi.TYPE_OBJECT,
     properties=OrderedDict((
