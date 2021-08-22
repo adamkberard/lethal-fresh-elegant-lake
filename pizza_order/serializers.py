@@ -13,12 +13,24 @@ class PizzaOrderSerializer(serializers.Serializer):
     class Meta:
         module = PizzaOrder
 
-    Flavor = serializers.ChoiceField([item[0] for item in PizzaOrder.FLAVOR_CHOICES])
-    Size = serializers.ChoiceField([item[0] for item in PizzaOrder.SIZE_CHOICES])
-    Crust = serializers.ChoiceField([item[0] for item in PizzaOrder.CRUST_CHOICES])
-    Order_ID = serializers.IntegerField(read_only=True)
-    Table_No = serializers.IntegerField(read_only=True)
-    Timestamp = serializers.DateTimeField(read_only=True)
+    Flavor = serializers.ChoiceField(
+        [item[0] for item in PizzaOrder.FLAVOR_CHOICES],
+        label='Flavor of the pizza')
+    Size = serializers.ChoiceField(
+        [item[0] for item in PizzaOrder.SIZE_CHOICES],
+        label='Size of the pizza')
+    Crust = serializers.ChoiceField(
+        [item[0] for item in PizzaOrder.CRUST_CHOICES],
+        label='Crust for the pizza')
+    Order_ID = serializers.IntegerField(
+        read_only=True,
+        label='Id of the order')
+    Table_No = serializers.IntegerField(
+        read_only=True,
+        label="Customer's table number")
+    Timestamp = serializers.DateTimeField(
+        read_only=True,
+        label='Creation/Update timestamp of the order')
 
     def pizzeriaLogin(self, pizzaOrder):
         # First we log in to the pizza place to get a fresh token

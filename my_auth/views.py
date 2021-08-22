@@ -14,24 +14,20 @@ loginResponseSchema = openapi.Schema(
     required=[]
 )
 
-
+# View for logging in a user
 class LoginView(CreateAPIView):
-    """
-    View for authenticating users
-    """
     serializer_class = MyLogInSerializer
 
-    @swagger_auto_schema(responses=({200: loginResponseSchema, 400: 'Bad Request'}))
+    @swagger_auto_schema(responses=({201: loginResponseSchema}))
     def post(self, request):
+        """Logs in user and responds with an access token."""
         return super().post(request)
 
-
-class RegisterView(CreateAPIView):
-    """
-    View for registering users
-    """
+# View for registering users
+class RegisterView(CreateAPIView):    
     serializer_class = MyRegisterSerializer
 
     @swagger_auto_schema(responses=({201: loginResponseSchema, 400: 'Bad Request'}))
     def post(self, request):
+        """Creates a new user and responds with an access token."""
         return super().post(request)
