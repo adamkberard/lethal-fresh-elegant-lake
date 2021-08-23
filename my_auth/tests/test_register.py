@@ -7,7 +7,6 @@ from .factories import DEFAULT_PASSWORD, CustomUserFactory
 
 
 class Test_Register_View(MyTestCase):
-
     def test_correct_login_no_data(self):
         """Testing a legitimate register."""
         data = {'email': 'test@email.com', 'password': 'pass4test'}
@@ -48,6 +47,21 @@ class Test_Register_View(MyTestCase):
         self.assertResponse400(response)
         responseData = self.loadJSONSafely(response)
         check_against_data = {'email': ['Enter a valid email address.']}
+        self.assertEqual(responseData, check_against_data)
+
+    def test_register_email_already_taken(self):
+        """Testing a bad register with an email already used."""
+        user = CustomUserFactory()
+        data = {'email': user.email, 'password': DEFAULT_PASSWORD}
+
+        client = APIClient()
+        url = reverse('register')
+        response = client.post(url, data, format='json')
+
+        # Make sure things went wrong first
+        self.assertResponse400(response)
+        responseData = self.loadJSONSafely(response)
+        check_against_data = {'email': ['Email already in use.']}
         self.assertEqual(responseData, check_against_data)
 
     def test_register_no_email(self):

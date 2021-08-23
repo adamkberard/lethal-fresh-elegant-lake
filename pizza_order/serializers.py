@@ -105,7 +105,7 @@ class PizzaOrderSerializer(serializers.Serializer):
                 # future orders from working.
                 pizzaOrder.Table_No += random.randint(1000, 10000)
 
-                # The third time it fails just give up and deletes our entry for the pizza order
+                # The third time it fails just give up and delete our entry for the pizza order
                 if(i == attempts - 1):
                     # Delete the pizza order on our end if the order doesn't go through
                     pizzaOrder.delete()
@@ -132,7 +132,6 @@ class PizzaOrderSerializer(serializers.Serializer):
         tempPizzaOrder.Table_No = responseData['Table_No']
         # Beautiful auto-timestamp parser makes the work easy
         tempPizzaOrder.Timestamp = parser.parse(responseData['Timestamp'])
-        print(tempPizzaOrder.Timestamp)
         tempPizzaOrder.save()
 
         return tempPizzaOrder
