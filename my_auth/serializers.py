@@ -14,6 +14,11 @@ class MyRegisterSerializer(serializers.Serializer):
     class Meta:
         module = CustomUser
 
+    def validate_email(self, data):
+        if CustomUser.objects.filter(email=data).exists():
+            raise serializers.ValidationError("Email already in use.")
+        return data
+
     def create(self, validated_data):
         user = CustomUser.objects.create_user(**validated_data)
         return user
